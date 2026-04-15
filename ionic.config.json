@@ -1,0 +1,7 @@
+{
+  "name": "bizApp",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
