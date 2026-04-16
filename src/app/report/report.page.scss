@@ -1,0 +1,30 @@
+ion-content {
+  --background: #000000; // Your current dark theme
+}
+
+ion-item {
+  --background: transparent;
+  --color: #ffffff;
+  margin-bottom: 20px;
+}
+
+/* Fix the calendar visibility */
+ion-datetime {
+  --background: #1e1e1e; // Darker grey so it stands out from the black
+  --color: #ffffff;
+  border-radius: 16px;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(102, 0, 26, 0.3); // Burgundy glow
+  
+  // These make the text visible
+  color: #ffffff;
+}
+
+/* Style the labels */
+ion-label {
+  color: #800020 !important; // Your Burgundy
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.9rem;
+}

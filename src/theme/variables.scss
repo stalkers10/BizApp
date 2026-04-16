@@ -1,2 +1,30 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+:root {
+  /* Deep, Professional Burgundy */
+  --ion-color-primary: #66001a; 
+  --ion-color-primary-rgb: 102, 0, 26;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #4d0013;
+  --ion-color-primary-tint: #751a31;
+
+  /* Neutral Surface Colors */
+  --ion-background-color: #f8f9fa;
+  --ion-item-background: #ffffff;
+  --ion-card-background: #ffffff;
+  
+  /* Typography */
+  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+}
+
+ion-toolbar {
+  --background: var(--ion-color-primary);
+  --color: white;
+  --border-style: none;
+}
+
+ion-tab-bar {
+  --border: none;
+  --background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px); // Glassmorphism effect
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  height: 65px;
+}

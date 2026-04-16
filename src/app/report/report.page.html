@@ -1,0 +1,36 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Export Report</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="export-container">
+    <ion-item lines="none">
+      <ion-label position="stacked">Start Date</ion-label>
+      <ion-datetime 
+        presentation="date" 
+        [(ngModel)]="startDate" 
+        size="cover">
+      </ion-datetime>
+    </ion-item>
+
+    <ion-item lines="none" class="ion-margin-top">
+      <ion-label position="stacked">End Date</ion-label>
+      <ion-datetime 
+        presentation="date" 
+        [(ngModel)]="endDate" 
+        size="cover">
+      </ion-datetime>
+    </ion-item>
+
+    <ion-button expand="block" (click)="exportToExcel()" [disabled]="!startDate || !endDate">
+      <ion-icon name="download-outline" slot="start"></ion-icon>
+      Generate Excel Report
+    </ion-button>
+    
+    <p class="status-message" *ngIf="message" [style.color]="messageColor === 'danger' ? '#ff4961' : '#2dd36f'">
+      {{ message }}
+    </p>
+  </div>
+</ion-content>

@@ -1,27 +1,54 @@
-#container {
-  text-align: center;
+/* Modal Styling */
+ion-modal {
+  --background: #121212; // Solid dark background
+  --border-radius: 20px;
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  ion-content {
+    --background: #121212;
+  }
+
+  ion-toolbar {
+    --background: #1a1a1a;
+    --border-style: none;
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+/* Make inputs dark and professional */
+ion-item {
+  --background: #1e1e1e; // Slightly lighter than the background for depth
+  --color: #ffffff;
+  --border-radius: 12px;
+  margin-bottom: 12px;
+  --inner-padding-end: 10px;
+  --highlight-color-focused: var(--ion-color-primary);
+
+  // Fix the label color
+  ion-label, ion-select, ion-input, ion-textarea {
+    color: #ffffff !important;
+  }
+
+  // Modern input focus
+  &.item-has-focus {
+    --background: #252525;
+  }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+/* Fix the calendar inside the modal */
+ion-datetime {
+  --background: #1e1e1e;
+  --color: #ffffff;
+  border-radius: 12px;
+  margin: 10px 0;
+  
+  // Ensure the day numbers are visible
+  color: white;
 }
 
-#container a {
-  text-decoration: none;
+/* The Save Button */
+ion-button.add-btn {
+  --border-radius: 12px;
+  --background: var(--ion-color-primary);
+  height: 50px;
+  font-weight: 700;
+  margin-top: 20px;
 }

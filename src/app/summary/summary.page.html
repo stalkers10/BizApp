@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Summary</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Overall Summary</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p><strong>Total Income:</strong> {{ totalIncome | number:'1.2-2' }}</p>
+      <p><strong>Total Expense:</strong> {{ totalExpense | number:'1.2-2' }}</p>
+      <p><strong>Net Balance:</strong> <span [style.color]="netBalance >= 0 ? 'green' : 'red'">{{ netBalance | number:'1.2-2' }}</span></p>
+    </ion-card-content>
+  </ion-card>
+
+  <h2>By Category</h2>
+  <ion-list>
+    <ion-item *ngFor="let cat of categories">
+      <ion-label>{{ cat.category }}</ion-label>
+      <ion-note slot="end">{{ cat.total | number:'1.2-2' }}</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>
