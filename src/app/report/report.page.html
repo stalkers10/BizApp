@@ -1,36 +1,56 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Export Report</ion-title>
+    <div class="header-content">
+      <p class="header-eyebrow">Export</p>
+      <h1 class="header-title">Reports</h1>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div class="export-container">
-    <ion-item lines="none">
-      <ion-label position="stacked">Start Date</ion-label>
-      <ion-datetime 
-        presentation="date" 
-        [(ngModel)]="startDate" 
-        size="cover">
-      </ion-datetime>
-    </ion-item>
+<ion-content>
+  <div class="report-container">
 
-    <ion-item lines="none" class="ion-margin-top">
-      <ion-label position="stacked">End Date</ion-label>
-      <ion-datetime 
-        presentation="date" 
-        [(ngModel)]="endDate" 
-        size="cover">
-      </ion-datetime>
-    </ion-item>
+    <p class="section-hint">Select a date range to generate your Excel report.</p>
 
-    <ion-button expand="block" (click)="exportToExcel()" [disabled]="!startDate || !endDate">
+    <!-- Date pickers -->
+    <div class="date-grid">
+      <div class="date-block">
+        <p class="date-label">From</p>
+        <div class="date-card">
+          <ion-datetime
+            presentation="date"
+            [(ngModel)]="startDate"
+            size="cover">
+          </ion-datetime>
+        </div>
+      </div>
+
+      <div class="date-block">
+        <p class="date-label">To</p>
+        <div class="date-card">
+          <ion-datetime
+            presentation="date"
+            [(ngModel)]="endDate"
+            size="cover">
+          </ion-datetime>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export button -->
+    <ion-button
+      expand="block"
+      (click)="exportToExcel()"
+      [disabled]="!startDate || !endDate"
+      class="export-btn">
       <ion-icon name="download-outline" slot="start"></ion-icon>
       Generate Excel Report
     </ion-button>
-    
-    <p class="status-message" *ngIf="message" [style.color]="messageColor === 'danger' ? '#ff4961' : '#2dd36f'">
-      {{ message }}
-    </p>
+
+    <!-- Status message -->
+    <div class="status-card" *ngIf="message" [class.success]="messageColor === 'success'" [class.danger]="messageColor === 'danger'">
+      <p class="status-text">{{ message }}</p>
+    </div>
+
   </div>
 </ion-content>

@@ -1,50 +1,53 @@
 ion-tab-bar {
-  // Deep dark background with high transparency for the blur effect
-  --background: rgba(18, 18, 18, 0.8); 
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  
-  // Remove the default border and add a very subtle top glow
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  height: 75px; // Slightly taller for better thumb reach
-  padding-bottom: env(safe-area-inset-bottom); // Handles notch devices
-  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
+  --background: rgba(13, 13, 13, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  height: 70px;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 ion-tab-button {
-  --color: #888888; // Muted grey for inactive
-  --color-selected: #9b1b30; // Brighter burgundy to pop against dark
+  --color: #3d3d3d;
+  --color-selected: #9b1b30;
   background: transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
   ion-icon {
-    font-size: 26px;
-    margin-bottom: 2px;
+    font-size: 22px;
+    margin-bottom: 3px;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   ion-label {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
+    transition: color 0.25s ease;
   }
 
-  // The "Active Indicator" effect
+  // Active pill indicator at the top of the tab bar
   &.tab-selected {
+    --color-selected: #9b1b30;
+
     ion-icon {
       transform: translateY(-2px);
-      filter: drop-shadow(0 0 8px rgba(155, 27, 48, 0.4));
     }
-    
-    // Optional: Add a small dot under the active icon
-    &::after {
+
+    // Glowing top pill
+    &::before {
       content: '';
       position: absolute;
-      bottom: 12px;
-      width: 4px;
-      height: 4px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 32px;
+      height: 2px;
       background: #9b1b30;
-      border-radius: 50%;
+      border-radius: 0 0 3px 3px;
+      box-shadow: 0 0 10px rgba(155, 27, 48, 0.6);
     }
   }
 }

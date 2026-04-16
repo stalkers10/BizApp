@@ -16,10 +16,8 @@ export class SummaryPage implements OnInit, OnDestroy {
   totalIncome = 0;
   totalExpense = 0;
   netBalance = 0;
-  
-  // Array for displaying category breakdown in the UI
-  categoryTotals: { name: string; value: number; percentage: number }[] = [];
-  
+  categories: { category: string; total: number; percentage: number }[] = [];
+
   private sub!: Subscription;
 
   constructor(private dbService: DatabaseService) {}
@@ -30,8 +28,11 @@ export class SummaryPage implements OnInit, OnDestroy {
     });
   }
 
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe();
+  }
+
   calculateSummary(txns: Transaction[]) {
-    // 1. Calculate Totals
     this.totalIncome = txns
       .filter(t => t.type === 'Income')
       .reduce((sum, t) => sum + t.amount, 0);
@@ -42,25 +43,27 @@ export class SummaryPage implements OnInit, OnDestroy {
 
     this.netBalance = this.totalIncome - this.totalExpense;
 
-    // 2. Calculate Category Breakdown
-    const groupMap = new Map<string, number>();
+    const catMap = new Map<string, number>();
     txns.forEach(t => {
-      const current = groupMap.get(t.category) || 0;
-      groupMap.set(t.category, current + t.amount);
+      catMap.set(t.category, (catMap.get(t.category) || 0) + t.amount);
     });
 
-    // 3. Convert Map to Array for *ngFor and calculate percentages
-    const grandTotal = this.totalIncome + this.totalExpense;
-    this.categoryTotals = Array.from(groupMap.entries()).map(([name, value]) => ({
-      name,
-      value,
-      percentage: grandTotal > 0 ? (value / grandTotal) : 0
-    })).sort((a, b) => b.value - a.value); // Sort highest spenders first
+    const grandTotal = Array.from(catMap.values()).reduce((s, v) => s + v, 0);
+
+    this.categories = Array.from(catMap.entries())
+      .map(([category, total]) => ({
+        category,
+        total,
+        percentage: grandTotal > 0 ? (total / grandTotal) * 100 : 0
+      }))
+      .sort((a, b) => b.total - a.total);
   }
 
-  ngOnDestroy() {
-    if (this.sub) {
-      this.sub.unsubscribe();
-    }
+  getCategoryIcon(category: string): string {
+    const icons: Record<string, string> = {
+      Sales: '📈', Marketing: '📣', Salary: '💼',
+      Utility: '⚡', Logistic: '🚚', Purchase: '🛒'
+    };
+    return icons[category] ?? '💰';
   }
 }

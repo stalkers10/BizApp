@@ -1,81 +1,129 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Transactions</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="header-titles">
+        <p class="header-eyebrow">SmallBiz Ledger</p>
+        <h1 class="header-title">Transactions</h1>
+      </div>
+      <div class="header-balance" *ngIf="(transactions$ | async) as txns">
+        <p class="balance-label">Net Balance</p>
+        <p class="balance-value" [class.positive]="getNet(txns) >= 0" [class.negative]="getNet(txns) < 0">
+          {{ getNet(txns) | number:'1.2-2' }}
+        </p>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-list>
-    <ion-item *ngFor="let txn of (transactions$ | async)" lines="full">
-      <ion-label>
-        <h2>{{ txn.description }}</h2>
-        <p>{{ txn.category }} • {{ txn.type }}</p>
-        <p>{{ txn.date | date:'mediumDate' }}</p>
-      </ion-label>
-      <ion-note slot="end" [color]="txn.type === 'Income' ? 'success' : 'danger'">
-        {{ txn.type === 'Income' ? '+' : '-' }}{{ txn.amount | number:'1.2-2' }}
-      </ion-note>
-      <ion-button slot="end" fill="clear" color="danger" (click)="deleteTxn(txn.id!)">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+<ion-content>
+  <div class="transactions-container">
+
+    <div class="empty-state" *ngIf="(transactions$ | async)?.length === 0">
+      <div class="empty-icon">₦</div>
+      <p class="empty-title">No transactions yet</p>
+      <p class="empty-sub">Tap the + button to add your first entry</p>
+    </div>
+
+    <div class="txn-list" *ngIf="(transactions$ | async) as txns">
+      <div
+        class="txn-card"
+        *ngFor="let txn of txns"
+        [class.income]="txn.type === 'Income'"
+        [class.expense]="txn.type === 'Expense'">
+
+        <div class="txn-left">
+          <div class="txn-icon">
+            <span>{{ getCategoryIcon(txn.category) }}</span>
+          </div>
+          <div class="txn-info">
+            <p class="txn-desc">{{ txn.description }}</p>
+            <p class="txn-meta">{{ txn.category }} • {{ txn.date | date:'MMM d, y' }}</p>
+          </div>
+        </div>
+
+        <div class="txn-right">
+          <p class="txn-amount" [class.income-text]="txn.type === 'Income'" [class.expense-text]="txn.type === 'Expense'">
+            {{ txn.type === 'Income' ? '+' : '-' }}{{ txn.amount | number:'1.2-2' }}
+          </p>
+          <button class="delete-btn" (click)="deleteTxn(txn.id!)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openAddModal()">
+    <ion-fab-button (click)="openAddModal()" class="fab-add">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
   <!-- Add Modal -->
-  <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false">
-  <ng-template>
-    <ion-header class="ion-no-border">
-      <ion-toolbar>
-        <ion-title>New Transaction</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="isModalOpen = false">Cancel</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="isModalOpen = false" [breakpoints]="[0, 1]" [initialBreakpoint]="1">
+    <ng-template>
+      <ion-header class="ion-no-border">
+        <ion-toolbar>
+          <ion-title class="modal-title">New Transaction</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="isModalOpen = false" class="cancel-btn">Cancel</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
 
-    <ion-content class="ion-padding">
-      <ion-item lines="none">
-        <ion-select [(ngModel)]="newTxn.type" label="Transaction Type" label-placement="stacked">
-          <ion-select-option value="Income">Income</ion-select-option>
-          <ion-select-option value="Expense">Expense</ion-select-option>
-        </ion-select>
-      </ion-item>
+      <ion-content class="modal-content ion-padding">
 
-      <ion-item lines="none">
-        <ion-input type="number" [(ngModel)]="newTxn.amount" label="Amount" label-placement="stacked" placeholder="0.00"></ion-input>
-      </ion-item>
+        <!-- Type Toggle -->
+        <div class="type-toggle">
+          <button class="toggle-btn" [class.active-income]="newTxn.type === 'Income'" (click)="newTxn.type = 'Income'">
+            Income
+          </button>
+          <button class="toggle-btn" [class.active-expense]="newTxn.type === 'Expense'" (click)="newTxn.type = 'Expense'">
+            Expense
+          </button>
+        </div>
 
-      <ion-item lines="none">
-        <ion-label position="stacked">Date</ion-label>
-        <ion-datetime presentation="date" [(ngModel)]="newTxn.dateStr" size="cover"></ion-datetime>
-      </ion-item>
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+          <ion-item lines="none" class="form-item">
+            <ion-input type="number" [(ngModel)]="newTxn.amount" placeholder="0.00" class="amount-input"></ion-input>
+          </ion-item>
+        </div>
 
-      <ion-item lines="none">
-        <ion-select [(ngModel)]="newTxn.category" label="Category" label-placement="stacked">
-          <ion-select-option value="Sales">Sales</ion-select-option>
-          <ion-select-option value="Marketing">Marketing</ion-select-option>
-          <ion-select-option value="Salary">Salary</ion-select-option>
-          <ion-select-option value="Utility">Utility</ion-select-option>
-          <ion-select-option value="Logistic">Logistic</ion-select-option>
-          <ion-select-option value="Purchase">Purchase</ion-select-option>
-        </ion-select>
-      </ion-item>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <ion-item lines="none" class="form-item date-item">
+            <ion-datetime presentation="date" [(ngModel)]="newTxn.dateStr" size="cover"></ion-datetime>
+          </ion-item>
+        </div>
 
-      <ion-item lines="none">
-        <ion-textarea [(ngModel)]="newTxn.description" label="Description" label-placement="stacked" placeholder="What was this for?"></ion-textarea>
-      </ion-item>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <ion-item lines="none" class="form-item">
+            <ion-select [(ngModel)]="newTxn.category" interface="popover" placeholder="Select category">
+              <ion-select-option value="Sales">Sales</ion-select-option>
+              <ion-select-option value="Marketing">Marketing</ion-select-option>
+              <ion-select-option value="Salary">Salary</ion-select-option>
+              <ion-select-option value="Utility">Utility</ion-select-option>
+              <ion-select-option value="Logistic">Logistic</ion-select-option>
+              <ion-select-option value="Purchase">Purchase</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
 
-      <ion-button expand="block" (click)="addTransaction()" class="add-btn ion-margin-top">
-        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-        Save Transaction
-      </ion-button>
-    </ion-content>
-  </ng-template>
-</ion-modal>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <ion-item lines="none" class="form-item">
+            <ion-textarea [(ngModel)]="newTxn.description" placeholder="What was this for?" rows="2" auto-grow="true"></ion-textarea>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" (click)="addTransaction()" class="save-btn">
+          Save Transaction
+        </ion-button>
+
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

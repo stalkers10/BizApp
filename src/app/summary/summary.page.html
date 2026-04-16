@@ -1,36 +1,77 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Summary</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <div class="header-content">
+      <p class="header-eyebrow">Overview</p>
+      <h1 class="header-title">Summary</h1>
+    </div>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Overall Summary</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Total Income:</strong> {{ totalIncome | number:'1.2-2' }}</p>
-      <p><strong>Total Expense:</strong> {{ totalExpense | number:'1.2-2' }}</p>
-      <p><strong>Net Balance:</strong> <span [style.color]="netBalance >= 0 ? 'green' : 'red'">{{ netBalance | number:'1.2-2' }}</span></p>
-    </ion-card-content>
-  </ion-card>
+<ion-content>
+  <div class="summary-container">
 
-  <ion-list>
-  <ion-list-header>
-    <ion-label>Spending by Category</ion-label>
-  </ion-list-header>
-
-  <ion-item *ngFor="let cat of categoryTotals">
-    <ion-label>
-      <h2>{{ cat.name }}</h2>
-      <div [style.width.%]="cat.percentage * 100" 
-           style="height: 4px; background: var(--ion-color-primary); border-radius: 2px;">
+    <!-- Net Balance Hero Card -->
+    <div class="hero-card" [class.positive]="netBalance >= 0" [class.negative]="netBalance < 0">
+      <div class="hero-top">
+        <p class="hero-label">Net Balance</p>
+        <div class="hero-badge" [class.positive-badge]="netBalance >= 0" [class.negative-badge]="netBalance < 0">
+          {{ netBalance >= 0 ? 'Profit' : 'Loss' }}
+        </div>
       </div>
-    </ion-label>
-    <ion-note slot="end" color="dark">
-      {{ cat.value | number:'1.0-0' }} FCFA
-    </ion-note>
-  </ion-item>
-</ion-list>
+      <p class="hero-amount">{{ netBalance | number:'1.2-2' }}</p>
+      <div class="hero-divider"></div>
+      <div class="hero-stats">
+        <div class="stat-block">
+          <p class="stat-label">Income</p>
+          <p class="stat-value income-color">+{{ totalIncome | number:'1.2-2' }}</p>
+        </div>
+        <div class="stat-separator"></div>
+        <div class="stat-block">
+          <p class="stat-label">Expenses</p>
+          <p class="stat-value expense-color">-{{ totalExpense | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Income bar -->
+    <div class="bar-section" *ngIf="totalIncome + totalExpense > 0">
+      <div class="bar-track">
+        <div class="bar-fill income-bar"
+          [style.width.%]="(totalIncome / (totalIncome + totalExpense)) * 100">
+        </div>
+      </div>
+      <div class="bar-legend">
+        <span class="legend-dot income-dot"></span><span class="legend-text">Income</span>
+        <span class="legend-dot expense-dot"></span><span class="legend-text">Expense</span>
+      </div>
+    </div>
+
+    <!-- Category breakdown -->
+    <div class="section-header">
+      <p class="section-title">By Category</p>
+    </div>
+
+    <div class="category-list">
+      <div class="category-card" *ngFor="let cat of categories">
+        <div class="category-left">
+          <div class="category-icon">{{ getCategoryIcon(cat.category) }}</div>
+          <div>
+            <p class="category-name">{{ cat.category }}</p>
+            <p class="category-sub">{{ cat.percentage | number:'1.0-0' }}% of total</p>
+          </div>
+        </div>
+        <div class="category-right">
+          <p class="category-amount">{{ cat.total | number:'1.2-2' }}</p>
+          <div class="category-bar-track">
+            <div class="category-bar-fill" [style.width.%]="cat.percentage"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="categories.length === 0">
+        <p>No transactions to summarise yet.</p>
+      </div>
+    </div>
+
+  </div>
 </ion-content>
