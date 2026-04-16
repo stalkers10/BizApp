@@ -16,11 +16,21 @@
     </ion-card-content>
   </ion-card>
 
-  <h2>By Category</h2>
   <ion-list>
-    <ion-item *ngFor="let cat of categories">
-      <ion-label>{{ cat.category }}</ion-label>
-      <ion-note slot="end">{{ cat.total | number:'1.2-2' }}</ion-note>
-    </ion-item>
-  </ion-list>
+  <ion-list-header>
+    <ion-label>Spending by Category</ion-label>
+  </ion-list-header>
+
+  <ion-item *ngFor="let cat of categoryTotals">
+    <ion-label>
+      <h2>{{ cat.name }}</h2>
+      <div [style.width.%]="cat.percentage * 100" 
+           style="height: 4px; background: var(--ion-color-primary); border-radius: 2px;">
+      </div>
+    </ion-label>
+    <ion-note slot="end" color="dark">
+      {{ cat.value | number:'1.0-0' }} FCFA
+    </ion-note>
+  </ion-item>
+</ion-list>
 </ion-content>

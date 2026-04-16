@@ -18,6 +18,12 @@ export class TabsPage implements OnInit {
   }
 
   async ngOnInit() {
+  // CRITICAL: Ensure this is called so the db connection exists
+  try {
     await this.dbService.initDB();
+    console.log('Database Initialized');
+  } catch (err) {
+    console.error('Database failed to load', err);
   }
+}
 }

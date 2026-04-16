@@ -51,12 +51,15 @@ export class HomePage implements OnInit {
     this.isModalOpen = true;
   }
 
-  async addTransaction() {
-    if (!this.newTxn.description || !this.newTxn.amount || this.newTxn.amount <= 0) {
-      alert('Please fill all fields correctly');
-      return;
-    }
+ async addTransaction() {
+  console.log('Save button clicked!', this.newTxn);
 
+  if (!this.newTxn.description || !this.newTxn.amount || this.newTxn.amount <= 0) {
+   console.warn('Validation failed: fill all fields correctly');
+    return;
+  }
+
+  try {
     const txn: Omit<Transaction, 'id'> = {
       type: this.newTxn.type,
       amount: Number(this.newTxn.amount),
@@ -66,9 +69,13 @@ export class HomePage implements OnInit {
     };
 
     await this.dbService.addTransaction(txn);
+    console.log('Transaction saved successfully!');
     this.isModalOpen = false;
-    // No need to call loadTransactions()! The Observable handles it.
+  } catch (error) {
+    console.error('Error saving to DB:', error);
+    alert('Database Error: ' + JSON.stringify(error));
   }
+}
 
   async deleteTxn(id: number) {
     if (confirm('Delete this transaction?')) {

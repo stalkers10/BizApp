@@ -35,3 +35,17 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+/* Force dark mode for date pickers and modals */
+ion-modal, ion-datetime {
+  --background: #121212;
+  --ion-item-background: #1e1e1e;
+  color: white;
+}
+
+/* Fix the white input boxes in your "Add Transaction" screenshot */
+ion-item {
+  --background: rgba(255, 255, 255, 0.05);
+  --color: white;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
